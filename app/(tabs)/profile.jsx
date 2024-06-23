@@ -174,6 +174,7 @@ export default function Profile() {
           </TouchableOpacity>
           <Text style={styles.label}>School</Text>
           <SegmentedControl
+            appearance="light"
             values={["EAAA", "EPHEC", "Seneca"]}
             selectedIndex={school === "EAAA" ? 0 : school === "EPHEC" ? 1 : 2}
             onChange={event => {

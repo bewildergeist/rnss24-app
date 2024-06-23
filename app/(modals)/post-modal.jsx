@@ -15,14 +15,13 @@ import { useEffect, useState } from "react";
 import {
   Button,
   Image,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View
 } from "react-native";
 import Toast from "react-native-root-toast";
@@ -175,11 +174,12 @@ export default function PostModal() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}>
-      {/* The Toast component must be a child of RootSiblingParent to be shown inside the modal */}
-      <RootSiblingParent>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inner}>
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+      <ScrollView style={styles.container}>
+        <View style={styles.innerContainer}>
+          {/* The Toast component must be a child of RootSiblingParent to be shown inside the modal */}
+          <RootSiblingParent>
             <Stack.Screen
               options={{
                 title: id ? "Update Post" : "Create Post",
@@ -238,9 +238,9 @@ export default function PostModal() {
               onPress={handleSave}
               style="primary"
             />
-          </View>
-        </TouchableWithoutFeedback>
-      </RootSiblingParent>
+          </RootSiblingParent>
+        </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -248,8 +248,11 @@ export default function PostModal() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
     backgroundColor: secondary
+  },
+  innerContainer: {
+    paddingHorizontal: 24,
+    paddingBottom: 84
   },
   image: {
     aspectRatio: 1,
@@ -260,7 +263,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: labelFontSize,
     color: primary,
-    marginTop: 30,
+    marginTop: 24,
     marginBottom: 5
   },
   input: {

@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import Toast from "react-native-root-toast";
 import {
   borderRadius,
@@ -30,9 +31,13 @@ import { ERROR_TOAST_CONFIG } from "../../constants/toast-configurations";
 
 export default function Profile() {
   const [name, setName] = useState("");
-  const [title, setTitle] = useState("");
   const [mail, setMail] = useState("");
   const [image, setImage] = useState("");
+  const [school, setSchool] = useState("");
+  const [country, setCountry] = useState("");
+  const [aboutMe, setAboutMe] = useState("");
+  const [loveToDo, setLoveToDo] = useState("");
+  const [wishApp, setWishApp] = useState("");
   const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   const url = `${EXPO_PUBLIC_API_URL}/users/${auth.currentUser?.uid}.json`;
@@ -47,8 +52,12 @@ export default function Profile() {
       if (userData) {
         // if userData exists set states with values from userData (data from firebase)
         setName(userData?.name);
-        setTitle(userData?.title);
         setImage(userData?.image);
+        setSchool(userData?.school);
+        setCountry(userData?.country);
+        setAboutMe(userData?.aboutMe);
+        setLoveToDo(userData?.loveToDo);
+        setWishApp(userData?.wishApp);
       }
     }
     getUser();
@@ -97,7 +106,16 @@ export default function Profile() {
   }
 
   async function handleSaveUser() {
-    const userToUpdate = { name: name, mail: mail, title, image }; // create an object to hold the user to update properties
+    const userToUpdate = {
+      name,
+      mail,
+      image,
+      school,
+      country,
+      aboutMe,
+      loveToDo,
+      wishApp
+    };
 
     const response = await fetch(url, {
       method: "PUT",
@@ -143,31 +161,59 @@ export default function Profile() {
               }}
             />
           </TouchableOpacity>
+          <Text style={styles.label}>School</Text>
+          <SegmentedControl
+            values={["EAAA", "EPHEC", "Seneca"]}
+            selectedIndex={school === "EAAA" ? 0 : school === "EPHEC" ? 1 : 2}
+            onChange={event => {
+              setSchool(event.nativeEvent.value);
+            }}
+          />
           <Text style={styles.label}>Name</Text>
           <TextInput
             style={styles.input}
             onChangeText={setName}
             value={name}
-            placeholder="Type your name"
-            autoCapitalize="none"
+            placeholder="Your full name"
           />
-
-          <Text style={styles.label}>Title</Text>
+          <Text style={styles.label}>Email</Text>
           <TextInput
-            style={styles.input}
-            onChangeText={setTitle}
-            value={title}
-            placeholder="Type your title"
-            autoCapitalize="none"
-          />
-          <Text style={styles.label}>Mail</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setMail}
+            style={[styles.input, styles.nonEditableInput]}
             value={mail}
             placeholder="Type your mail"
             autoCapitalize="none"
             editable={false}
+          />
+          <Text style={styles.label}>Home country</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setCountry}
+            value={country}
+            placeholder="Which country do you call home?"
+          />
+          <Text style={styles.label}>About me</Text>
+          <TextInput
+            style={[styles.input, styles.multilineInput]}
+            onChangeText={setAboutMe}
+            value={aboutMe}
+            placeholder="A bit about yourself"
+            multiline
+          />
+          <Text style={styles.label}>I love to...</Text>
+          <TextInput
+            style={[styles.input, styles.multilineInput]}
+            onChangeText={setLoveToDo}
+            value={loveToDo}
+            placeholder="What are your favorite activities or hobbies?"
+            multiline
+          />
+          <Text style={styles.label}>An app I wish existed</Text>
+          <TextInput
+            style={[styles.input, styles.multilineInput]}
+            onChangeText={setWishApp}
+            value={wishApp}
+            placeholder="What kind of an app are you missing on your phone?"
+            multiline
           />
           <View style={styles.buttonContainer}>
             <StyledButton
@@ -193,16 +239,21 @@ const styles = StyleSheet.create({
   label: {
     fontSize: labelFontSize,
     color: primary,
-    marginTop: 24,
+    marginTop: 16,
     marginBottom: 5
   },
   input: {
-    height: 50,
     padding: 10,
     backgroundColor: tintColorLight,
     borderRadius: borderRadius,
     borderColor: primary,
     borderWidth: 2
+  },
+  multilineInput: {
+    height: 100
+  },
+  nonEditableInput: {
+    backgroundColor: "#dddddd"
   },
   imageContainer: {
     borderWidth: 3,

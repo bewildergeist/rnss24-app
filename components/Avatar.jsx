@@ -30,7 +30,7 @@ export default function Avatar({ userId }) {
           <View>
             <Text style={styles.avatarName}>{user?.name}</Text>
             <Text style={styles.avatarTitle}>
-              {user?.school ?? user?.title}
+              {[user?.school, user?.title].filter(Boolean).join(" • ")}
             </Text>
           </View>
         </View>

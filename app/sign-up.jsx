@@ -15,17 +15,22 @@ import StyledButton from "../components/StyledButton";
 export default function SignUp() {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const auth = getAuth();
 
   function handleSignUp() {
+    if (password !== confirmPassword) {
+      // Check if passwords match
+      setMessage("Passwords do not match");
+      return;
+    }
     createUserWithEmailAndPassword(auth, mail, password)
       .then(userCredential => {
         // Signed in
         const user = userCredential.user;
-        console.log(user);
-        Toast.show('Account created. Go to "Profile" to update your profile.');
-        router.replace("/");
+        Toast.show("Account created — please fill out your profile");
+        router.replace("/profile");
       })
       .catch(error => {
         let errorMessage = error.code.split("/")[1];
@@ -60,6 +65,14 @@ export default function SignUp() {
         secureTextEntry={true}
         placeholder="Type your password"
       />
+      <Text style={styles.label}>Confirm Password</Text>
+      <TextInput
+        style={styles.input}
+        onChangeText={setConfirmPassword}
+        value={confirmPassword}
+        secureTextEntry={true}
+        placeholder="Confirm your password"
+      />
       <Text style={styles.errorMessage}>{message}</Text>
       <StyledButton
         text="Create Account"
@@ -85,7 +98,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: labelFontSize,
     color: primary,
-    marginTop: 30,
+    marginTop: 16,
     marginBottom: 5
   },
   input: {

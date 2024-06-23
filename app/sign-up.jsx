@@ -23,9 +23,8 @@ export default function SignUp() {
       .then(userCredential => {
         // Signed in
         const user = userCredential.user;
-        console.log(user);
         Toast.show('Account created. Go to "Profile" to update your profile.');
-        router.replace("/");
+        router.replace("/profile");
       })
       .catch(error => {
         let errorMessage = error.code.split("/")[1];

@@ -28,7 +28,7 @@ export default function Avatar({ userId }) {
         </View>
         <View>
           <Text style={styles.avatarName}>{user?.name}</Text>
-          <Text style={styles.avatarTitle}>{user?.title}</Text>
+          <Text style={styles.avatarTitle}>{user?.school ?? user?.title}</Text>
         </View>
       </View>
     </TouchableOpacity>

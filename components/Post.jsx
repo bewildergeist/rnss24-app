@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     minHeight: 320,
     paddingBottom: 30,
     borderBottomColor: secondary,
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     backgroundColor: tintColorLight
   },
   headerContainer: {

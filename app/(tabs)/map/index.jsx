@@ -1,10 +1,9 @@
 import MapMarker from "@/components/MapMarker";
-import { primary } from "@/constants/ThemeVariables";
 import * as Location from "expo-location";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { Platform, StyleSheet, View } from "react-native";
+import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 
 export default function Map() {
   const [posts, setPosts] = useState([]);
@@ -56,6 +55,7 @@ export default function Map() {
   return (
     <View style={styles.container}>
       <MapView
+        provider={Platform.OS === "ios" ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={location}
         region={location}

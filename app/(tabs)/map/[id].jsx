@@ -5,7 +5,7 @@ import { ScrollView } from "react-native";
 
 export default function MapDetail() {
   const [post, setPost] = useState({});
-  const { EXPO_PUBLIC_API_URL } = process.env;
+  const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
   const { id } = useLocalSearchParams();
 
   useEffect(() => {

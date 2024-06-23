@@ -16,7 +16,7 @@ import Avatar from "./Avatar";
 
 export default function Post({ post, reload }) {
   const { showActionSheetWithOptions } = useActionSheet();
-  const { EXPO_PUBLIC_API_URL } = process.env;
+  const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   function formatDate(timestamp) {
     const createdAt = new Date(timestamp);

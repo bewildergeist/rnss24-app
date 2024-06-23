@@ -13,7 +13,7 @@ export default function Users() {
   const [users, setUsers] = useState([]);
   const [sections, setSections] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { EXPO_PUBLIC_API_URL } = process.env;
+  const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   useEffect(() => {
     getUsers();

@@ -4,14 +4,14 @@ import {
   tintColorLight,
   tintColorDark
 } from "@/constants/ThemeVariables";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Foundation from "@expo/vector-icons/Foundation";
 import { Tabs, router } from "expo-router";
 import React from "react";
 import { Button, Platform } from "react-native";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <Foundation size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
@@ -51,7 +51,7 @@ export default function TabLayout() {
         options={{
           title: "Map",
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="map" color={color} />
+          tabBarIcon: ({ color }) => <TabBarIcon name="marker" color={color} />
         }}
       />
       <Tabs.Screen
@@ -59,14 +59,16 @@ export default function TabLayout() {
         options={{
           title: "Users",
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="users" color={color} />
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="torsos-all" color={color} />
+          )
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />
+          tabBarIcon: ({ color }) => <TabBarIcon name="torso" color={color} />
         }}
       />
     </Tabs>

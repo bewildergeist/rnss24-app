@@ -13,7 +13,7 @@ export default function UserDetails() {
   const { id } = useLocalSearchParams();
   const [user, setUser] = useState([]);
   const [posts, setPosts] = useState([]);
-  const { EXPO_PUBLIC_API_URL } = process.env;
+  const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   useEffect(() => {
     getUser();

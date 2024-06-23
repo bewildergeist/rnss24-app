@@ -23,13 +23,16 @@ import {
   tintColorLight
 } from "../../constants/ThemeVariables";
 import { auth } from "../../firebase-config";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import uuid from "react-native-uuid";
+import { ERROR_TOAST_CONFIG } from "../../constants/toast-configurations";
 
 export default function Profile() {
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [mail, setMail] = useState("");
   const [image, setImage] = useState("");
-  const { EXPO_PUBLIC_API_URL } = process.env;
+  const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   const url = `${EXPO_PUBLIC_API_URL}/users/${auth.currentUser?.uid}.json`;
 
@@ -56,16 +59,39 @@ export default function Profile() {
   }
 
   async function chooseImage() {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      base64: true,
-      allowsEditing: true,
-      quality: 0.3
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        quality: 0.3
+      });
 
-    if (!result.canceled) {
-      const base64 = "data:image/jpeg;base64," + result.assets[0].base64;
-      setImage(base64);
+      if (!result.canceled) {
+        // Convert image to blob
+        const response = await fetch(result.assets[0].uri);
+        const blob = await response.blob();
+
+        // Create a reference to the file in Cloud Storage
+        const storage = getStorage();
+        const storageRef = ref(
+          storage,
+          `avatars/${name?.toLowerCase()?.replaceAll(" ", "-")}-${uuid.v4()}`
+        );
+
+        // Upload the file to Cloud Storage
+        const snapshot = await uploadBytes(storageRef, blob);
+
+        // Get the download URL
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        // Save the download URL to React state
+        setImage(downloadURL);
+      }
+    } catch (error) {
+      console.error("Error choosing image:", error);
+      Toast.show(
+        "Sorry, something went wrong:\n" + error.message,
+        ERROR_TOAST_CONFIG
+      );
     }
   }
 
@@ -77,11 +103,14 @@ export default function Profile() {
       body: JSON.stringify(userToUpdate)
     });
     if (response.ok) {
-      const data = await response.json();
-      console.log("User data: ", data);
       Toast.show("Your profile has been updated");
     } else {
-      Toast.show("Sorry, something went wrong");
+      const data = await response.json();
+      const errorMessage = data?.error;
+      Toast.show(
+        "Sorry, something went wrong:\n" + (errorMessage || response.status),
+        ERROR_TOAST_CONFIG
+      );
     }
   }
 

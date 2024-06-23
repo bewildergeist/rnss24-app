@@ -5,7 +5,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Avatar({ userId }) {
   const [user, setUser] = useState([]);
-  const { EXPO_PUBLIC_API_URL } = process.env;
+  const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
 
   useEffect(() => {
     async function getUser() {
@@ -24,11 +24,11 @@ export default function Avatar({ userId }) {
     <TouchableOpacity onPress={() => router.push(`users/${userId}`)}>
       <View style={styles.avatarContainer}>
         <View style={styles.avatarImageContainer}>
-          <Image style={styles.avatarImage} source={{ uri: user.image }} />
+          <Image style={styles.avatarImage} source={{ uri: user?.image }} />
         </View>
         <View>
-          <Text style={styles.avatarName}>{user.name}</Text>
-          <Text style={styles.avatarTitle}>{user.title}</Text>
+          <Text style={styles.avatarName}>{user?.name}</Text>
+          <Text style={styles.avatarTitle}>{user?.title}</Text>
         </View>
       </View>
     </TouchableOpacity>

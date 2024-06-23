@@ -9,6 +9,7 @@ import {
 } from "@/constants/ThemeVariables";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
+import { RootSiblingParent } from "react-native-root-siblings";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -25,14 +26,19 @@ import {
   View
 } from "react-native";
 import Toast from "react-native-root-toast";
+import { ERROR_TOAST_CONFIG } from "../../constants/toast-configurations";
 import { auth } from "../../firebase-config";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import uuid from "react-native-uuid";
 
 export default function PostModal() {
   const { id } = useLocalSearchParams();
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState("");
   const [location, setLocation] = useState({});
-  const { EXPO_PUBLIC_API_URL, EXPO_PUBLIC_OPEN_CAGE_API_KEY } = process.env;
+  const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
+  const EXPO_PUBLIC_OPEN_CAGE_API_KEY =
+    process.env.EXPO_PUBLIC_OPEN_CAGE_API_KEY;
 
   useEffect(() => {
     async function getPost() {
@@ -123,21 +129,46 @@ export default function PostModal() {
       Toast.show("Post successfully created");
       router.back();
     } else {
-      Toast.show("Sorry, something went wrong. Please try again.");
+      const data = await response.json();
+      const errorMessage = data?.error;
+      Toast.show(
+        "Sorry, something went wrong:\n" + (errorMessage || response.status),
+        ERROR_TOAST_CONFIG
+      );
     }
   }
 
   async function chooseImage() {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      base64: true,
-      allowsEditing: true,
-      quality: 0.3
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        quality: 0.3
+      });
 
-    if (!result.canceled) {
-      const base64 = "data:image/jpeg;base64," + result.assets[0].base64;
-      setImage(base64);
+      if (!result.canceled) {
+        // Convert image to blob
+        const response = await fetch(result.assets[0].uri);
+        const blob = await response.blob();
+
+        // Create a reference to the file in Cloud Storage
+        const storage = getStorage();
+        const storageRef = ref(storage, `images/${uuid.v4()}`);
+
+        // Upload the file to Cloud Storage
+        const snapshot = await uploadBytes(storageRef, blob);
+
+        // Get the download URL
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        // Save the download URL to React state
+        setImage(downloadURL);
+      }
+    } catch (error) {
+      console.error("Error choosing image:", error);
+      Toast.show(
+        "Sorry, something went wrong:\n" + error.message,
+        ERROR_TOAST_CONFIG
+      );
     }
   }
 
@@ -145,64 +176,71 @@ export default function PostModal() {
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.inner}>
-          <Stack.Screen
-            options={{
-              title: id ? "Update Post" : "Create Post",
-              headerLeft: () => (
-                <Button
-                  title="Cancel"
-                  color={Platform.OS === "ios" ? tintColorLight : tintColorDark}
-                  onPress={() => router.back()}
-                />
-              ),
-              headerRight: () => (
-                <Button
-                  title={id ? "Update" : "Create"}
-                  color={Platform.OS === "ios" ? tintColorLight : tintColorDark}
-                  onPress={handleSave}
-                />
-              )
-            }}
-          />
-
-          <Text style={styles.label}>Image</Text>
-          <TouchableOpacity onPress={chooseImage}>
-            <Image
-              style={styles.image}
-              source={{
-                uri:
-                  image ||
-                  "https://cederdorff.com/race/images/placeholder-image.webp"
+      {/* The Toast component must be a child of RootSiblingParent to be shown inside the modal */}
+      <RootSiblingParent>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.inner}>
+            <Stack.Screen
+              options={{
+                title: id ? "Update Post" : "Create Post",
+                headerLeft: () => (
+                  <Button
+                    title="Cancel"
+                    color={
+                      Platform.OS === "ios" ? tintColorLight : tintColorDark
+                    }
+                    onPress={() => router.back()}
+                  />
+                ),
+                headerRight: () => (
+                  <Button
+                    title={id ? "Update" : "Create"}
+                    color={
+                      Platform.OS === "ios" ? tintColorLight : tintColorDark
+                    }
+                    onPress={handleSave}
+                  />
+                )
               }}
             />
-          </TouchableOpacity>
-          <Text style={styles.label}>Caption</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setCaption}
-            value={caption}
-            placeholder="Type your caption"
-          />
-          <Text style={styles.label}>City</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Type your city"
-            value={
-              location.city
-                ? `${location.city}, ${location.country}`
-                : "Loading your current location..."
-            }
-            editable={false}
-          />
-          <StyledButton
-            text={id ? "Update Post" : "Create Post"}
-            onPress={handleSave}
-            style="primary"
-          />
-        </View>
-      </TouchableWithoutFeedback>
+
+            <Text style={styles.label}>Image</Text>
+            <TouchableOpacity onPress={chooseImage}>
+              <Image
+                style={styles.image}
+                source={{
+                  uri:
+                    image ||
+                    "https://cederdorff.com/race/images/placeholder-image.webp"
+                }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.label}>Caption</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={setCaption}
+              value={caption}
+              placeholder="Type your caption"
+            />
+            <Text style={styles.label}>City</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Type your city"
+              value={
+                location.city
+                  ? `${location.city}, ${location.country}`
+                  : "Loading your current location..."
+              }
+              editable={false}
+            />
+            <StyledButton
+              text={id ? "Update Post" : "Create Post"}
+              onPress={handleSave}
+              style="primary"
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </RootSiblingParent>
     </KeyboardAvoidingView>
   );
 }

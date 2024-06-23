@@ -1,5 +1,5 @@
 import { primary } from "@/constants/ThemeVariables";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -21,17 +21,21 @@ export default function Avatar({ userId }) {
   }, [userId]);
 
   return (
-    <TouchableOpacity onPress={() => router.push(`users/${userId}`)}>
-      <View style={styles.avatarContainer}>
-        <View style={styles.avatarImageContainer}>
-          <Image style={styles.avatarImage} source={{ uri: user?.image }} />
+    <Link href={`/users/${userId}`} asChild>
+      <TouchableOpacity>
+        <View style={styles.avatarContainer}>
+          <View style={styles.avatarImageContainer}>
+            <Image style={styles.avatarImage} source={{ uri: user?.image }} />
+          </View>
+          <View>
+            <Text style={styles.avatarName}>{user?.name}</Text>
+            <Text style={styles.avatarTitle}>
+              {user?.school ?? user?.title}
+            </Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.avatarName}>{user?.name}</Text>
-          <Text style={styles.avatarTitle}>{user?.school ?? user?.title}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Link>
   );
 }
 

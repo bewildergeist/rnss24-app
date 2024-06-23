@@ -66,6 +66,15 @@
         "projectId": "e6d27521-1d4e-4435-9ac4-d4abe2b3f6ca"
       }
     },
-    "owner": "rnss24"
+    "owner": "rnss24",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 30000,
+      "url": "https://u.expo.dev/e6d27521-1d4e-4435-9ac4-d4abe2b3f6ca"
+    }
   }
 }

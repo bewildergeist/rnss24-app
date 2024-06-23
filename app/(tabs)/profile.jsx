@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import {
   Button,
   Image,
+  KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
@@ -44,7 +45,7 @@ export default function Profile() {
       const userData = await response.json();
 
       if (userData) {
-        // if userData exists set states with values from userData (data from firestore)
+        // if userData exists set states with values from userData (data from firebase)
         setName(userData?.name);
         setTitle(userData?.title);
         setImage(userData?.image);
@@ -115,73 +116,84 @@ export default function Profile() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Stack.Screen
-        options={{
-          headerRight: () => (
-            <Button
-              title="Sign Out"
-              color={Platform.OS === "ios" ? tintColorLight : primary}
-              onPress={handleSignOut}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+      <ScrollView style={styles.container}>
+        <Stack.Screen
+          options={{
+            headerRight: () => (
+              <Button
+                title="Sign Out"
+                color={Platform.OS === "ios" ? tintColorLight : primary}
+                onPress={handleSignOut}
+              />
+            )
+          }}
+        />
+        <View style={styles.innerContainer}>
+          <TouchableOpacity onPress={chooseImage} style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={{
+                uri:
+                  image ||
+                  "https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg"
+              }}
             />
-          )
-        }}
-      />
-      <View>
-        <TouchableOpacity onPress={chooseImage} style={styles.imageContainer}>
-          <Image
-            style={styles.image}
-            source={{
-              uri:
-                image ||
-                "https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg"
-            }}
+          </TouchableOpacity>
+          <Text style={styles.label}>Name</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setName}
+            value={name}
+            placeholder="Type your name"
+            autoCapitalize="none"
           />
-        </TouchableOpacity>
-        <Text style={styles.label}>Name</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={setName}
-          value={name}
-          placeholder="Type your name"
-          autoCapitalize="none"
-        />
 
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={setTitle}
-          value={title}
-          placeholder="Type your title"
-          autoCapitalize="none"
-        />
-        <Text style={styles.label}>Mail</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={setMail}
-          value={mail}
-          placeholder="Type your mail"
-          autoCapitalize="none"
-          editable={false}
-        />
-        <View style={styles.buttonContainer}>
-          <StyledButton text="Save" style="primary" onPress={handleSaveUser} />
+          <Text style={styles.label}>Title</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setTitle}
+            value={title}
+            placeholder="Type your title"
+            autoCapitalize="none"
+          />
+          <Text style={styles.label}>Mail</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setMail}
+            value={mail}
+            placeholder="Type your mail"
+            autoCapitalize="none"
+            editable={false}
+          />
+          <View style={styles.buttonContainer}>
+            <StyledButton
+              text="Save"
+              style="primary"
+              onPress={handleSaveUser}
+            />
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
     backgroundColor: secondary
+  },
+  innerContainer: {
+    padding: 24
   },
   label: {
     fontSize: labelFontSize,
     color: primary,
-    marginTop: 30,
+    marginTop: 24,
     marginBottom: 5
   },
   input: {

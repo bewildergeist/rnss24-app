@@ -27,7 +27,12 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
-      "package": "com.rnss24.rnss24postapp"
+      "package": "com.rnss24.rnss24postapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBgjTep383GcPB_9wjl5-CkpKas6_g1gaA"
+        }
+      }
     },
     "web": {
       "bundler": "metro",

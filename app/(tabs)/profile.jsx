@@ -123,7 +123,13 @@ export default function Profile() {
     });
     if (response.ok) {
       Toast.show("Your profile has been updated");
-      router.push("/(tabs)/users/" + auth.currentUser.uid);
+      router.navigate({
+        pathname: "/users/[id]",
+        params: {
+          id: auth.currentUser.uid,
+          updatedAt: Date.now()
+        }
+      });
     } else {
       const data = await response.json();
       const errorMessage = data?.error;

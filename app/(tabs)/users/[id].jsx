@@ -11,7 +11,7 @@ import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { tintColorLight } from "../../../constants/ThemeVariables";
 
 export default function UserDetails() {
-  const { id } = useLocalSearchParams();
+  const { id, updatedAt } = useLocalSearchParams();
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -19,7 +19,7 @@ export default function UserDetails() {
   useEffect(() => {
     getUser();
     getPosts();
-  }, [id]);
+  }, [id, updatedAt]);
 
   async function getUser() {
     const response = await fetch(`${EXPO_PUBLIC_API_URL}/users/${id}.json`);

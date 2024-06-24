@@ -27,24 +27,26 @@ export default function Users() {
       ...dataObj[key]
     })); // from object to array
     usersArray.sort((userA, userB) => userA.name.localeCompare(userB.name)); // sort by name
+
+    console.log(users);
     setUsers(usersArray);
   }
 
   useEffect(() => {
     // group users by title
-    const groupUsersByTitle = users.reduce((titles, user) => {
+    const groupUsersBySchool = users.reduce((schools, user) => {
       // reduce to object
-      const title = user.title || "Others"; // default title
-      if (!titles[title]) {
+      const school = user.school || "Others"; // default title
+      if (!schools[school]) {
         // if title not exist, create new
-        titles[title] = { title: title, data: [] }; // title: title, data: []
+        schools[school] = { title: school, data: [] }; // title: title, data: []
       }
-      titles[title].data.push(user); // push user to data
-      return titles; // return object
+      schools[school].data.push(user); // push user to data
+      return schools; // return object
     }, {}); // initial value is empty object
 
-    const sectionData = Object.values(groupUsersByTitle); // from object to array
-    sectionData.sort((a, b) => a.title.localeCompare(b.title)); // sort by title
+    const sectionData = Object.values(groupUsersBySchool); // from object to array
+    sectionData.sort((a, b) => a.school?.localeCompare(b.school)); // sort by title
     setSections(sectionData); // set sections - state
   }, [users]);
 

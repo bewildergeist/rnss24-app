@@ -12,7 +12,9 @@ export default function User({ user }) {
         </View>
         <View>
           <Text style={styles.userName}>{user.name}</Text>
-          <Text style={styles.userTitle}>{user.title}</Text>
+          <Text style={styles.userTitle}>
+            {[user?.school, user?.title].filter(Boolean).join(" • ")}
+          </Text>
         </View>
         <Ionicons
           style={styles.chevron}

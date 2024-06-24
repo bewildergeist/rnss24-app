@@ -3,7 +3,8 @@ import {
   labelFontSize,
   primary,
   secondary,
-  tintColorLight
+  tintColorLight,
+  placeholderTextColor
 } from "@/constants/ThemeVariables";
 import { Stack, router } from "expo-router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
@@ -55,6 +56,7 @@ export default function SignUp() {
         onChangeText={setMail}
         value={mail}
         placeholder="Type your mail"
+        placeholderTextColor={placeholderTextColor}
         autoCapitalize="none"
       />
       <Text style={styles.label}>Password</Text>
@@ -64,6 +66,7 @@ export default function SignUp() {
         value={password}
         secureTextEntry={true}
         placeholder="Type your password"
+        placeholderTextColor={placeholderTextColor}
       />
       <Text style={styles.label}>Confirm Password</Text>
       <TextInput
@@ -72,6 +75,7 @@ export default function SignUp() {
         value={confirmPassword}
         secureTextEntry={true}
         placeholder="Confirm your password"
+        placeholderTextColor={placeholderTextColor}
       />
       <Text style={styles.errorMessage}>{message}</Text>
       <StyledButton

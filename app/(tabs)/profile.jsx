@@ -22,7 +22,8 @@ import {
   labelFontSize,
   primary,
   secondary,
-  tintColorLight
+  tintColorLight,
+  placeholderTextColor
 } from "../../constants/ThemeVariables";
 import { auth } from "../../firebase-config";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -187,12 +188,14 @@ export default function Profile() {
             onChangeText={setName}
             value={name}
             placeholder="Your full name"
+            placeholderTextColor={placeholderTextColor}
           />
           <Text style={styles.label}>Email</Text>
           <TextInput
             style={[styles.input, styles.nonEditableInput]}
             value={mail}
             placeholder="Type your mail"
+            placeholderTextColor={placeholderTextColor}
             autoCapitalize="none"
             editable={false}
           />
@@ -202,6 +205,7 @@ export default function Profile() {
             onChangeText={setCountry}
             value={country}
             placeholder="Which country do you call home?"
+            placeholderTextColor={placeholderTextColor}
           />
           <Text style={styles.label}>About me</Text>
           <TextInput
@@ -209,6 +213,7 @@ export default function Profile() {
             onChangeText={setAboutMe}
             value={aboutMe}
             placeholder="A bit about yourself"
+            placeholderTextColor={placeholderTextColor}
             multiline
           />
           <Text style={styles.label}>I love to...</Text>
@@ -217,6 +222,7 @@ export default function Profile() {
             onChangeText={setLoveToDo}
             value={loveToDo}
             placeholder="What are your favorite activities or hobbies?"
+            placeholderTextColor={placeholderTextColor}
             multiline
           />
           <Text style={styles.label}>An app I wish existed</Text>
@@ -225,6 +231,7 @@ export default function Profile() {
             onChangeText={setWishApp}
             value={wishApp}
             placeholder="What kind of an app are you missing on your phone?"
+            placeholderTextColor={placeholderTextColor}
             multiline
           />
           <View style={styles.buttonContainer}>

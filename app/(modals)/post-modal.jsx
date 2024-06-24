@@ -5,7 +5,8 @@ import {
   primary,
   secondary,
   tintColorDark,
-  tintColorLight
+  tintColorLight,
+  placeholderTextColor
 } from "@/constants/ThemeVariables";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
@@ -221,11 +222,13 @@ export default function PostModal() {
               onChangeText={setCaption}
               value={caption}
               placeholder="Type your caption"
+              placeholderTextColor={placeholderTextColor}
             />
             <Text style={styles.label}>City</Text>
             <TextInput
               style={styles.input}
               placeholder="Type your city"
+              placeholderTextColor={placeholderTextColor}
               value={
                 location.city
                   ? `${location.city}, ${location.country}`

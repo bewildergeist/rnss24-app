@@ -67,6 +67,7 @@ export default function Posts() {
 
 const styles = StyleSheet.create({
   list: {
-    flex: 1
+    flex: 1,
+    fontFamily: "Brown-Regular"
   }
 });

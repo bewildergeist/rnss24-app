@@ -132,7 +132,8 @@ const styles = StyleSheet.create({
   },
   caption: {
     fontSize: 22,
-    padding: 15
+    padding: 15,
+    fontFamily: "Brown-Regular"
   },
   date: {
     fontSize: 15,

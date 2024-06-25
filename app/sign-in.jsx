@@ -89,9 +89,7 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: secondary
   },
-  main: {
-    flex: 1
-  },
+
   image: {
     aspectRatio: 1,
     height: 300,

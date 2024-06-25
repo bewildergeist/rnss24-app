@@ -90,8 +90,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: primary,
     backgroundColor: secondary,
-    paddingHorizontal: 10,
-    paddingTop: 25,
-    paddingBottom: 10
+    padding: 10
   }
 });

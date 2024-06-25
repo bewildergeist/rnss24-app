@@ -1,15 +1,15 @@
 import {
   borderRadius,
   labelFontSize,
+  placeholderTextColor,
   primary,
   secondary,
-  tintColorLight,
-  placeholderTextColor
+  tintColorLight
 } from "@/constants/ThemeVariables";
 import { Stack, router } from "expo-router";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, View } from "react-native";
 import StyledButton from "../components/StyledButton";
 
 export default function SignIn() {
@@ -47,6 +47,10 @@ export default function SignIn() {
             backgroundColor: primary
           }
         }}
+      />
+      <Image
+        source={require("@/assets/images/logo.png")}
+        style={styles.image}
       />
       <Text style={styles.label}>Mail</Text>
       <TextInput
@@ -87,7 +91,9 @@ const styles = StyleSheet.create({
     flex: 1
   },
   image: {
-    aspectRatio: 1
+    aspectRatio: 1,
+    height: 300,
+    alignSelf: "center"
   },
   label: {
     fontSize: labelFontSize,

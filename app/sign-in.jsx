@@ -9,7 +9,7 @@ import {
 import { Stack, router } from "expo-router";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, ScrollView } from "react-native";
 import StyledButton from "../components/StyledButton";
 
 export default function SignIn() {
@@ -38,7 +38,9 @@ export default function SignIn() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      automaticallyAdjustKeyboardInsets={true}>
       <Stack.Screen
         options={{
           title: "Sign In",
@@ -77,7 +79,7 @@ export default function SignIn() {
         onPress={goToSignUp}
         style="secondary"
       />
-    </View>
+    </ScrollView>
   );
 }
 

@@ -9,7 +9,7 @@ import {
 import { Stack, router } from "expo-router";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useState } from "react";
-import { Image, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, StyleSheet, Text, TextInput, ScrollView } from "react-native";
 import Toast from "react-native-root-toast";
 import StyledButton from "../components/StyledButton";
 
@@ -40,7 +40,9 @@ export default function SignUp() {
       });
   }
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      automaticallyAdjustKeyboardInsets={true}>
       <Stack.Screen
         options={{
           title: "Create new account",
@@ -87,7 +89,7 @@ export default function SignUp() {
         style="primary"
         onPress={handleSignUp}
       />
-    </View>
+    </ScrollView>
   );
 }
 

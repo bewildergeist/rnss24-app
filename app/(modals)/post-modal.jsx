@@ -163,7 +163,7 @@ export default function PostModal() {
         // Save the download URL to React state
         setImage(downloadURL);
         console.log("Image uploaded to Cloud Storage:", downloadURL);
-        getSerpApiResults();
+        getSerpApiResults(downloadURL);
       }
     } catch (error) {
       console.error("Error choosing image:", error);
@@ -174,12 +174,12 @@ export default function PostModal() {
     }
   }
 
-  async function getSerpApiResults() {
+  async function getSerpApiResults(imageUrl) {
     console.log("Getting SERP API results");
     const apiKey =
       "0acab0a50fce029d6259b1c54ef4f424e6437b089f9c4c48731e7a197442e20b";
     const engine = "google_lens";
-    const imageUrl = encodeURIComponent(image);
+    imageUrl = encodeURIComponent(imageUrl);
 
     const url = `https://serpapi.com/search?api_key=${apiKey}&engine=${engine}&url=${imageUrl}`;
 

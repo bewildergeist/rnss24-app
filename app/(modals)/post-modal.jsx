@@ -99,10 +99,15 @@ export default function PostModal() {
       caption: caption,
       image: image
     };
-    const response = await fetch(`${EXPO_PUBLIC_API_URL}/posts/${id}.json`, {
-      method: "PATCH",
-      body: JSON.stringify(post)
-    });
+    const idToken = await auth.currentUser.getIdToken(); // get the user id token
+
+    const response = await fetch(
+      `${EXPO_PUBLIC_API_URL}/posts/${id}.json?auth=${idToken}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(post)
+      }
+    );
     if (response.ok) {
       Toast.show("Post successfully updated");
       router.back();
@@ -121,10 +126,15 @@ export default function PostModal() {
       uid: auth.currentUser.uid
     };
 
-    const response = await fetch(`${EXPO_PUBLIC_API_URL}/posts.json`, {
-      method: "POST",
-      body: JSON.stringify(post)
-    });
+    const idToken = await auth.currentUser.getIdToken(); // get the user id token
+
+    const response = await fetch(
+      `${EXPO_PUBLIC_API_URL}/posts.json?auth=${idToken}`,
+      {
+        method: "POST",
+        body: JSON.stringify(post)
+      }
+    );
     if (response.ok) {
       Toast.show("Post successfully created");
       router.back();

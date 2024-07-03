@@ -118,7 +118,9 @@ export default function Profile() {
       wishApp
     };
 
-    const response = await fetch(url, {
+    const idToken = await auth.currentUser.getIdToken(); // get the user id token
+
+    const response = await fetch(`${url}?auth=${idToken}`, {
       method: "PUT",
       body: JSON.stringify(userToUpdate)
     });

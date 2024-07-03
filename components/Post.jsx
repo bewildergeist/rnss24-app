@@ -83,8 +83,9 @@ export default function Post({ post, reload }) {
   }
 
   async function deletePost() {
+    const idToken = await auth.currentUser.getIdToken();
     const response = await fetch(
-      `${EXPO_PUBLIC_API_URL}/posts/${post.id}.json`,
+      `${EXPO_PUBLIC_API_URL}/posts/${post.id}.json?auth=${idToken}`,
       {
         method: "DELETE"
       }

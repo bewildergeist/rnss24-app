@@ -1,6 +1,10 @@
-const { getDefaultConfig } = require("@expo/metro-config");
+const { getDefaultConfig } = require("expo/metro-config");
 
-const defaultConfig = getDefaultConfig(__dirname);
-defaultConfig.resolver.sourceExts.push("cjs");
+/** @type {import('expo/metro-config').MetroConfig} */
+const config = getDefaultConfig(__dirname);
 
-module.exports = defaultConfig;
+// Disable Metro ES Module resolution to fix issues with Firebase:
+// https://github.com/expo/expo/discussions/36551
+config.resolver.unstable_enablePackageExports = false;
+
+module.exports = config;

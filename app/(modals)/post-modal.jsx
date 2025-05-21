@@ -12,7 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Button,
   Image,
@@ -50,26 +50,9 @@ export default function PostModal() {
     if (id) {
       getPost();
     }
-  }, [id]);
+  }, [id, EXPO_PUBLIC_API_URL]);
 
-  useEffect(() => {
-    async function requestLocationPersmissions() {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-        return;
-      }
-    }
-
-    async function loadLocation() {
-      await requestLocationPersmissions();
-      setLocation(await getLocation());
-    }
-
-    loadLocation();
-  }, []);
-
-  async function getLocation() {
+  const getLocation = useCallback(async () => {
     const currentLocation = await Location.getCurrentPositionAsync();
     const response = await fetch(
       `https://api.opencagedata.com/geocode/v1/json?q=${currentLocation.coords.latitude}+${currentLocation.coords.longitude}&key=${EXPO_PUBLIC_OPEN_CAGE_API_KEY}`
@@ -84,7 +67,24 @@ export default function PostModal() {
         data.results[0].components.town,
       country: data.results[0].components.country
     };
-  }
+  }, [EXPO_PUBLIC_OPEN_CAGE_API_KEY]);
+
+  useEffect(() => {
+    async function requestLocationPermissions() {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+    }
+
+    async function loadLocation() {
+      await requestLocationPermissions();
+      setLocation(await getLocation());
+    }
+
+    loadLocation();
+  }, [getLocation]);
 
   function handleSave() {
     if (id) {

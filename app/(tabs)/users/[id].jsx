@@ -3,12 +3,12 @@ import {
   labelFontSize,
   primary,
   secondary,
-  tintColorDark
+  tintColorDark,
+  tintColorLight
 } from "@/constants/ThemeVariables";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { tintColorLight } from "../../../constants/ThemeVariables";
 
 export default function UserDetails() {
   const { id, updatedAt } = useLocalSearchParams();
@@ -16,18 +16,13 @@ export default function UserDetails() {
   const [posts, setPosts] = useState([]);
   const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-  useEffect(() => {
-    getUser();
-    getPosts();
-  }, [id, updatedAt]);
-
-  async function getUser() {
+  const getUser = useCallback(async () => {
     const response = await fetch(`${EXPO_PUBLIC_API_URL}/users/${id}.json`);
     const data = await response.json();
     setUser(data);
-  }
+  }, [EXPO_PUBLIC_API_URL, id]);
 
-  async function getPosts() {
+  const getPosts = useCallback(async () => {
     // fetch posts where uid is equal to userId prop
     const response = await fetch(
       `${EXPO_PUBLIC_API_URL}/posts.json?orderBy="uid"&equalTo="${id}"`
@@ -39,7 +34,12 @@ export default function UserDetails() {
     })); // from object to array
     postsArray.sort((postA, postB) => postB.createdAt - postA.createdAt); // sort by timestamp/ createdBy
     setPosts(postsArray);
-  }
+  }, [EXPO_PUBLIC_API_URL, id]);
+
+  useEffect(() => {
+    getUser();
+    getPosts();
+  }, [getUser, getPosts, updatedAt]);
 
   return (
     <ScrollView style={styles.container}>

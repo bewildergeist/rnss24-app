@@ -1,5 +1,5 @@
 import { primary } from "@/constants/ThemeVariables";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -18,7 +18,7 @@ export default function Avatar({ userId }) {
     if (userId) {
       getUser();
     }
-  }, [userId]);
+  }, [userId, EXPO_PUBLIC_API_URL]);
 
   return (
     <Link href={`/users/${userId}`} asChild>

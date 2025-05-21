@@ -28,8 +28,6 @@ export default function SignUp() {
     }
     createUserWithEmailAndPassword(auth, mail, password)
       .then(userCredential => {
-        // Signed in
-        const user = userCredential.user;
         Toast.show("Account created — please fill out your profile");
         router.replace("/profile");
       })
@@ -117,7 +115,6 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 10,
     backgroundColor: tintColorLight,
-    borderRadius: borderRadius,
     borderRadius: borderRadius,
     borderColor: primary,
     borderWidth: 2

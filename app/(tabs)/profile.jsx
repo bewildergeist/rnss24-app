@@ -62,7 +62,7 @@ export default function Profile() {
       }
     }
     getUser();
-  }, []);
+  }, [url]);
 
   async function handleSignOut() {
     await signOut(auth);

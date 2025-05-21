@@ -106,7 +106,6 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: tintColorLight,
     borderRadius: borderRadius,
-    borderRadius: borderRadius,
     borderColor: primary,
     borderWidth: 2
   },

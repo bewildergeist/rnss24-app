@@ -7,15 +7,25 @@ import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 
 export default function Map() {
   const [posts, setPosts] = useState([]);
-  const { EXPO_PUBLIC_API_URL } = process.env;
+  const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
   const [location, setLocation] = useState(null);
+
+  const getPosts = useCallback(async () => {
+    const response = await fetch(`${EXPO_PUBLIC_API_URL}/posts.json`);
+    const dataObj = await response.json();
+    const postsArray = Object.keys(dataObj).map(key => ({
+      id: key,
+      ...dataObj[key]
+    })); // from object to array
+    setPosts(postsArray);
+  }, [EXPO_PUBLIC_API_URL]);
 
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [getPosts]);
 
   useEffect(() => {
-    async function requestLocationPersmissions() {
+    async function requestLocationPermissions() {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
@@ -30,27 +40,14 @@ export default function Map() {
         longitudeDelta: 0.04
       });
     }
-    requestLocationPersmissions();
+    requestLocationPermissions();
   }, []);
 
   // Sometimes we want to run side-effects when a screen is focused.
   // https://reactnavigation.org/docs/use-focus-effect/
-  useFocusEffect(
-    // If you don't wrap your effect in React.useCallback, the effect will run every render if the screen is focused.
-    useCallback(() => {
-      getPosts();
-    }, [])
-  );
-
-  async function getPosts() {
-    const response = await fetch(`${EXPO_PUBLIC_API_URL}/posts.json`);
-    const dataObj = await response.json();
-    const postsArray = Object.keys(dataObj).map(key => ({
-      id: key,
-      ...dataObj[key]
-    })); // from object to array
-    setPosts(postsArray);
-  }
+  useFocusEffect(() => {
+    getPosts();
+  });
 
   return (
     <View style={styles.container}>

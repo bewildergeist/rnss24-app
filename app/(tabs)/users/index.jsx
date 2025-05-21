@@ -1,13 +1,7 @@
 import User from "@/components/User";
 import { primary, secondary } from "@/constants/ThemeVariables";
-import { useEffect, useState } from "react";
-import {
-  RefreshControl,
-  SectionList,
-  StyleSheet,
-  Text,
-  View
-} from "react-native";
+import { useEffect, useState, useCallback } from "react";
+import { RefreshControl, SectionList, StyleSheet, Text } from "react-native";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -15,11 +9,7 @@ export default function Users() {
   const [refreshing, setRefreshing] = useState(false);
   const EXPO_PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL;
 
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  async function getUsers() {
+  const getUsers = useCallback(async () => {
     const response = await fetch(`${EXPO_PUBLIC_API_URL}/users.json`);
     const dataObj = await response.json();
     const usersArray = Object.keys(dataObj).map(key => ({
@@ -28,9 +18,12 @@ export default function Users() {
     })); // from object to array
     usersArray.sort((userA, userB) => userA.name.localeCompare(userB.name)); // sort by name
 
-    console.log(users);
     setUsers(usersArray);
-  }
+  }, [EXPO_PUBLIC_API_URL]);
+
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
 
   useEffect(() => {
     // group users by title
